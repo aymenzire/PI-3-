@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bracelet Monitor</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>Bracelet Patient Monitor</h1>
+          <div class="meta">Surveillance multi participants (API ESP32-C3)</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="tab active" data-view="global">Participants vue globale</button>
+        <button class="tab" data-view="single">Participants vue individuelle</button>
+        <button class="tab" data-view="settings">Paramètre</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <section id="view-global" class="view">
+      <div class="sectionHead">
+        <div>
+          <h2>Participants vue globale</h2>
+          <p class="meta">Recherche et affichage des bracelets</p>
+        </div>
+        <div class="statusChip"><span id="connDot" class="dot"></span><span id="connText">Disconnected</span></div>
+      </div>
+
+      <div class="toolbar">
+        <label class="field searchField">
+          <span class="fieldLabel">Recherche</span>
+          <input id="searchInput" type="text" placeholder="Nom, ID, bracelet">
+        </label>
+
+        <label class="field">
+          <span class="fieldLabel">Affichage</span>
+          <select id="displaySelect">
+            <option value="grid">Vue en grille</option>
+            <option value="table">Vue tableau</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="globalGridWrap">
+        <div id="globalGrid" class="patientsGrid"></div>
+      </div>
+
+      <div id="globalTableWrap" class="hidden"></div>
+    </section>
+
+    <section id="view-single" class="view hidden">
+      <div class="sectionHead">
+        <div>
+          <h2>Participants vue individuelle</h2>
+          <p class="meta">Profil, visualisation et état détaillé</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <label class="field">
+          <span class="fieldLabel">Participant</span>
+          <select id="singleSelect"></select>
+        </label>
+
+        <label class="field">
+          <span class="fieldLabel">Visualisation</span>
+          <select id="vizSelect">
+            <option value="none">Aucune</option>
+            <option value="temp">Température</option>
+            <option value="hum">Humidité</option>
+            <option value="cond">Conductivité</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="singleWrap"></div>
+    </section>
+
+    <section id="view-settings" class="view hidden">
+      <div class="sectionHead">
+        <div>
+          <h2>Paramètre</h2>
+          <p class="meta">Thème global et couleur principale de chaque participant</p>
+        </div>
+      </div>
+
+      <div class="settingsGrid">
+        <div class="settingsPanel">
+          <h3>Fond principal</h3>
+          <div class="settingsRow">
+            <input id="bgColor" type="color" value="#07121f">
+            <button class="btn primary" onclick="applyBg()">Appliquer</button>
+          </div>
+        </div>
+
+        <div class="settingsPanel">
+          <h3>Couleurs des participants</h3>
+          <div id="participantThemeList"></div>
+          <div class="settingsRow topGap">
+            <button class="btn primary" onclick="saveThemeSettings()">Sauvegarder thème</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="bubble" id="controlBubble">
+    <div class="bubbleHeader">
+      <div>
+        <p class="bubbleTitle">Device Control</p>
+        <div class="meta">Bracelet A (Patient 001)</div>
+      </div>
+      <div class="bubbleRight">
+        <span class="statusChip smallChip"><span id="ctrlDot" class="dot"></span><span id="ctrlText">Disconnected</span></span>
+        <button class="miniBtn" id="bubbleMinBtn" onclick="toggleBubble()">Min</button>
+      </div>
+    </div>
+    <div class="bubbleBody" id="bubbleBody">
+      <div class="controlRow">
+        <button class="miniBtn primary" onclick="ledOn()">LED ON</button>
+        <button class="miniBtn danger" onclick="ledOff()">LED OFF</button>
+        <button class="miniBtn warn" onclick="buzzerOn()">BUZZER ON</button>
+        <button class="miniBtn danger" onclick="buzzerOff()">BUZZER OFF</button>
+      </div>
+    </div>
+  </aside>
+
+  <script src="app.js"></script>
+</body>
+</html>
