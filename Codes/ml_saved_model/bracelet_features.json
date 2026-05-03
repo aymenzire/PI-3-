@@ -1,0 +1,7 @@
+[
+  "tempC",
+  "humPct",
+  "adcRaw",
+  "estimatedNetHydrationBalanceMl",
+  "sessionElapsedMin"
+]
