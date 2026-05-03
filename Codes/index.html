@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bracelet Monitor</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">
+          <img src="logo.jpg" alt="logo">
+        </div>
+        <div>
+          <h1>Bracelet Patient Monitor pour surveillance multi participants</h1>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="tab active" data-view="global">Participants vue globale</button>
+        <button class="tab" data-view="single">Participants vue individuelle</button>
+        <button class="tab" data-view="settings">Paramètres</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <section id="view-global" class="view">
+      <div class="sectionHead">
+        <div>
+          <h2>Participants vue globale</h2>
+          <p class="meta">C'est dans ce code que éventuellent un superviseur/médecin ou préposé peut voir l'ensemble des patients.</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <label class="field searchField">
+          <span class="fieldLabel">Recherche</span>
+          <input id="searchInput" type="text" placeholder="Nom, ID, bracelet">
+        </label>
+
+        <label class="field">
+          <span class="fieldLabel">Affichage</span>
+          <select id="displaySelect">
+            <option value="grid">Vue en grille</option>
+            <option value="table">Vue tableau</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="globalGridWrap">
+        <div id="globalGrid" class="patientsGrid"></div>
+      </div>
+
+      <div id="globalTableWrap" class="hidden"></div>
+    </section>
+
+    <section id="view-single" class="view hidden">
+      <div class="sectionHead">
+        <div>
+          <h2>Participants vue individuelle</h2>
+          <p class="meta">Visualisation détaillée d’un patient</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <label class="field">
+          <span class="fieldLabel">Participant</span>
+          <select id="singleSelect"></select>
+        </label>
+
+        <label class="field">
+          <span class="fieldLabel">Visualisation</span>
+          <select id="vizSelect">
+            <option value="none">Aucune</option>
+            <option value="temp">Température</option>
+            <option value="hum">Humidité</option>
+            <option value="cond">Conductivité</option>
+            <option value="signal">Signal de sortie</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="singleWrap"></div>
+    </section>
+
+    <section id="view-settings" class="view hidden">
+      <div class="sectionHead">
+        <div>
+          <h2>Paramètres</h2>
+          <p class="meta">Personnalisation interface</p>
+        </div>
+      </div>
+
+      <div class="settingsGrid">
+        <div class="settingsPanel">
+          <h3>Fond principal</h3>
+          <div class="settingsRow">
+            <input id="bgColor" type="color" value="#07121f">
+            <button class="btn primary" onclick="applyBg()">Appliquer</button>
+          </div>
+        </div>
+
+        <div class="settingsPanel">
+          <h3>Couleurs participants</h3>
+          <div id="participantThemeList"></div>
+          <div class="settingsRow topGap">
+            <button class="btn primary" onclick="saveThemeSettings()">Sauvegarder</button>
+          </div>
+        </div>
+      </div>
+      <div class="settingsPanel topGap">
+        <h3>Galerie d’images</h3>
+
+        <div class="mediaScroller">
+          <div class="mediaCard"><img src="1.png" alt="Image 1"></div>
+          <div class="mediaCard"><img src="2.png" alt="Image 2"></div>
+          <div class="mediaCard"><img src="3.png" alt="Image 3"></div>
+          <div class="mediaCard"><img src="4.png" alt="Image 4"></div>
+          <div class="mediaCard"><img src="5.png" alt="Image 5"></div>
+          <div class="mediaCard"><img src="6.png" alt="Image 6"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="bubble" id="controlBubble">
+    <div class="bubbleHeader">
+      <div>
+        <p class="bubbleTitle">Device Control</p>
+        <div class="meta">Bracelet A (Patient 001)</div>
+      </div>
+      <div class="bubbleRight">
+        <span class="statusChip smallChip">
+          <span id="ctrlDot" class="dot"></span>
+          <span id="ctrlText">Disconnected</span>
+        </span>
+        <button class="miniBtn" id="bubbleMinBtn" onclick="toggleBubble()">Min</button>
+      </div>
+    </div>
+
+    <div class="bubbleBody" id="bubbleBody">
+      <div class="controlRow">
+        <button class="miniBtn primary" onclick="ledOn()">LED ROUGE ON</button>
+        <button class="miniBtn danger" onclick="ledOff()">LED ROUGE OFF</button>
+        <button class="miniBtn ledJauneBtn" onclick="ledJauneOn()">LED JAUNE ON</button>
+        <button class="miniBtn danger" onclick="ledJauneOff()">LED JAUNE OFF</button>
+        <button class="miniBtn warn" onclick="buzzerOn()">BUZZER ON</button>
+        <button class="miniBtn danger" onclick="buzzerOff()">BUZZER OFF</button>
+      </div>
+
+      <!-- MODE SILENCIEUX -->
+      <div class="controlRow" style="margin-top:12px;align-items:center;gap:12px">
+        <label style="display:flex;align-items:center;gap:8px">
+          <input id="silentModeToggle" type="checkbox">
+          <span>Mode silencieux</span>
+        </label>
+      </div>
+
+      <div class="controlRow" style="margin-top:12px">
+        <div class="miniStat">Touch count: <b id="bubbleTouchCount">-</b></div>
+        <button class="miniBtn warn" onclick="resetTouchCount()">Reset</button>
+      </div>
+    </div>
+  </aside>
+
+  <script src="app.js"></script>
+</body>
+</html>
